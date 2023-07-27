@@ -1,4 +1,4 @@
-$script:domain = "s.ngelus.xyz";
+$script:domain = "scripthost.ngelus.xyz";
 $script:hostedScripts = [ordered]@{};
 $script:parsedHtml = $null;
 
@@ -110,8 +110,8 @@ do {
                 break;
             }
         }
-        Write-Host "s.ngelus.xyz/$($script:selectedScript.Name).$($script:selectedScript.Value.extension)";
-        iex(iwr "s.ngelus.xyz/$($script:selectedScript.Name).$($script:selectedScript.Value.extension)");
+        Write-Host "scripthost.ngelus.xyz/$($script:selectedScript.Name).$($script:selectedScript.Value.extension)";
+        iex(iwr "scripthost.ngelus.xyz/$($script:selectedScript.Name).$($script:selectedScript.Value.extension)");
     } elseif ($key.Character -eq 'q') {
         exit;
     } else {
