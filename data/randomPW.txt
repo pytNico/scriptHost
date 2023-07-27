@@ -172,3 +172,4 @@ if($script:key.Character -ne 'q') {
 
 Read-Host "(press enter to continue)";
 } until ($script:key.Character -eq 'q')
+$script:key = '';
