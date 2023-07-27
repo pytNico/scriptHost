@@ -1,3 +1,4 @@
 {
-    "key": "3"
+    "key": "3",
+    "description": "This just writes 'Hello World' to the console."
 }
