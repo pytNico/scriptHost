@@ -152,7 +152,7 @@ switch($key.Character) {
         break;
     }
     'q' {
-        exit;
+        break;
     }
     default {
     Write-Host -Fore Yellow @"
@@ -164,9 +164,11 @@ switch($key.Character) {
 }
 
 cls
-Write-Host "`n`tPassword:`t`t$newPassword`n`tThe password has been copied to your clipboard!`n"
-try{[Microsoft.VisualBasic.Interaction]::InputBox("Password", "Your new password:", $newPassword)|Out-Null}catch{}
-$newPassword|Set-Clipboard
+if($key.Character -ne 'q') {
+    Write-Host "`n`tPassword:`t`t$newPassword`n`tThe password has been copied to your clipboard!`n"
+    try{[Microsoft.VisualBasic.Interaction]::InputBox("Password", "Your new password:", $newPassword)|Out-Null}catch{}
+    $newPassword|Set-Clipboard
+}
 
 Read-Host "(press enter to continue)";
 } until ($key.Character -eq 'q')
