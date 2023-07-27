@@ -132,9 +132,9 @@ Write-Host @"
     q) Quit
 "@
 
-$key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
+$script:key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
 
-switch($key.Character) {
+switch($script:key.Character) {
     '1' {
         $newPassword = New-ShortStandardPassword;
         break;
@@ -164,11 +164,11 @@ switch($key.Character) {
 }
 
 cls
-if($key.Character -ne 'q') {
+if($script:key.Character -ne 'q') {
     Write-Host "`n`tPassword:`t`t$newPassword`n`tThe password has been copied to your clipboard!`n"
     try{[Microsoft.VisualBasic.Interaction]::InputBox("Password", "Your new password:", $newPassword)|Out-Null}catch{}
     $newPassword|Set-Clipboard
 }
 
 Read-Host "(press enter to continue)";
-} until ($key.Character -eq 'q')
+} until ($script:key.Character -eq 'q')
