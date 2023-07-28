@@ -88,13 +88,6 @@ do {
     }
     Write-Host "`n`tq) Quit`n";
     $script:key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
-    <#
-    switch ($script:key.Character) {
-        '1' {
-            Write-Host $($script:sortedHostedScripts.GetEnumerator().Where({$_.Value.key -eq 1}).Name);
-        }
-    }
-    #>
     if("0123456789".Contains($key.Character)) {
         cls;
         $script:selectedScript = $script:sortedHostedScripts.GetEnumerator().Where({$_.Value.index -eq $key.Character});
@@ -123,6 +116,3 @@ do {
     }
     Read-Host "(press enter to continue)";
 } until($script:key.Character -eq 'q')
-
-
-# $hash.GetEnumerator().where{$_.Name -ilike "2*"}
