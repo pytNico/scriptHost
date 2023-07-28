@@ -62,8 +62,8 @@ $script:temp.foreach({
 })
 
 do {
+
     cls
-    $script:i = 1;
     Write-Host -ForegroundColor Red -BackgroundColor White @"
 
                                                                                                                  
@@ -82,29 +82,45 @@ do {
                                                                                                                  
 
 "@
-    foreach ($script:hostedScript in $script:sortedHostedScripts.GetEnumerator()) {
-        Write-Host "`t$($script:i)) $($script:hostedScript.Name) - $($script:hostedScript.Value.description)";
-        $i++;
+
+    0..9 | foreach {
+        $script:j = $_;
+        if($script:hostedScripts.GetEnumerator().Where({$_.Value.index -eq "$script:j"})) {
+            $script:hostedScript = $script:hostedScripts.GetEnumerator().Where({$_.Value.index -eq "$script:j"});
+            Write-Host "`t$($script:j)) $($script:hostedScript.Name) - $($script:hostedScript.Value.description)";
+        } else {
+            Write-Host "`t$($script:j))"
+        }
     }
     Write-Host "`n`tq) Quit`n";
+
     $script:key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
     if("0123456789".Contains($key.Character)) {
         cls;
-        $script:selectedScript = $script:sortedHostedScripts.GetEnumerator().Where({$_.Value.index -eq $key.Character});
-        Write-Host "$($script:selectedScript.Name):";
-        if($script:selectedScript.Value.alternateDownloadPath) {
-            $script:targetExecutablePath = Join-Path $env:TEMP "$($script:selectedScript.Name).$($script:selectedScript.Value.extension)"
-            if(Test-path $script:targetExecutablePath) {
-                start $script:targetExecutablePath;
-                break;
+        if(!$script:sortedHostedScripts.GetEnumerator().Where({$_.Value.index -eq $key.Character})) {
+        
+        } else {
+            $script:selectedScript = $script:sortedHostedScripts.GetEnumerator().Where({$_.Value.index -eq $key.Character});
+            Write-Host "$($script:selectedScript.Name):";
+            if($script:selectedScript.Value.alternateDownloadPath) {
+                $script:targetExecutablePath = Join-Path $env:TEMP "$($script:selectedScript.Name).$($script:selectedScript.Value.extension)"
+                if(Test-path $script:targetExecutablePath) {
+                    start $script:targetExecutablePath;
+                    break;
+                } else {
+                    iwr $script:selectedScript.Value.alternateDownloadPath -OutFile $script:targetExecutablePath;
+                    start $script:targetExecutablePath;
+                    break;
+                }
+            }
+            if(("bat","batch","cmd").Contains($script:selectedScript.Value.runType)) {
+                $script:batchFilePath = Join-Path $env:TEMP "$($script:selectedScript.Name).bat";
+                (iwr "scripthost.ngelus.xyz/$($script:selectedScript.Name).$($script:selectedScript.Value.extension)").Content | Out-File $script:batchFilePath -Encoding ascii;
+                Start-Process $script:batchFilePath;
             } else {
-                iwr $script:selectedScript.Value.alternateDownloadPath -OutFile $script:targetExecutablePath;
-                start $script:targetExecutablePath;
-                break;
+                iex(iwr "scripthost.ngelus.xyz/$($script:selectedScript.Name).$($script:selectedScript.Value.extension)");
             }
         }
-        Write-Host "scripthost.ngelus.xyz/$($script:selectedScript.Name).$($script:selectedScript.Value.extension)";
-        iex(iwr "scripthost.ngelus.xyz/$($script:selectedScript.Name).$($script:selectedScript.Value.extension)");
     } elseif ($key.Character -eq 'q') {
         exit;
     } else {
