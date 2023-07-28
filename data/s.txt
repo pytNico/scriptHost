@@ -82,12 +82,11 @@ do {
                                                                                                                  
 
 "@
-
     0..9 | foreach {
         $script:j = $_;
         if($script:hostedScripts.GetEnumerator().Where({$_.Value.index -eq "$script:j"})) {
             $script:hostedScript = $script:hostedScripts.GetEnumerator().Where({$_.Value.index -eq "$script:j"});
-            Write-Host "`t$($script:j)) $($script:hostedScript.Name) - $($script:hostedScript.Value.description)";
+            Write-Host "`t$($script:j)) $($script:hostedScript.Name) | $($script:hostedScript.Value.description)";
         } else {
             Write-Host "`t$($script:j))"
         }
