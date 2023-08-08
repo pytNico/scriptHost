@@ -2,17 +2,14 @@ $script:domain = "scripthost.ngelus.xyz";
 $script:hostedScripts = [ordered]@{};
 $script:parsedHtml = $null;
 
-$script:webRequest = (iwr $script:domain);
-$script:parsedHtml = $script:webRequest.parsedHtml;
+$script:webRequest = (iwr $script:domain -UseBasicParsing);
+$script:links = $script:webRequest.Links.where({$_.href -notlike "*/github-pages-directory-listing*"}).href
 
-$script:body = $script:parsedHtml.getElementsByTagName("body")[0];
-$script:table = $script:body.getElementsByTagName("table")[0];
-$script:tableRows = $script:table.getElementsByTagName("tr");
-$script:tableRows | ForEach-Object {$script:i=0} {
+$script:links | ForEach-Object {$script:i=0} {
 
     if(!$script:i -eq 0) {
 
-        $script:hostedScript = $_.getElementsByTagName("a")[0].innerHtml;
+        $script:hostedScript = $_;
         $script:hostedScriptSplit = $script:hostedScript.Split(".");
         $script:hostedScriptName = $script:hostedScriptSplit[0..($script:hostedScriptSplit.Length-2)] -Join ".";
         $script:hostedScriptExtension = $script:hostedScriptSplit[$script:hostedScriptSplit.Length-1];
